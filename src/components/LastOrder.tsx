@@ -31,16 +31,14 @@ export default function LastOrder() {
 
     // Função para tocar o som
     const playSound = () => {
-      const audio = new Audio("/sounds/new-order.mp3"); // Caminho para o arquivo de som
+      const audio = new Audio("/sounds/new-order.mp3"); // Certifique-se de que o arquivo de som está na pasta public/sounds/
       audio.play();
     };
 
     // Evento quando um novo pedido for recebido
     socket.on("NEW_ORDER", (newOrder: Order) => {
-      console.log("Novo pedido recebido:", newOrder);
-
-      // Tocar o som ao receber um novo pedido
       playSound();
+      console.log("Novo pedido recebido:", newOrder);
 
       // Adicionar o novo pedido no topo da lista
       setOrders((prevOrders) => {
