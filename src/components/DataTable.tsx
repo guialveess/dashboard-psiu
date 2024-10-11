@@ -146,7 +146,7 @@ export default function DataTable<TData, TValue>({
             setPagination({ pageIndex: 0, pageSize: Number(e.target.value) })
           }
         >
-          {[10, 20, 30].map((size) => (
+          {[10, 20, 30, 50, 80, 100].map((size) => (
             <option key={size} value={size}>
               Show {size}
             </option>
