@@ -14,7 +14,9 @@ export default function LastOrder() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/orders");
+      const response = await axios.get(
+        "https://api-psiu-1.onrender.com/orders"
+      );
       setOrders(response.data);
     } catch (error) {
       console.error("Erro ao buscar pedidos:", error);
@@ -25,7 +27,7 @@ export default function LastOrder() {
 
   useEffect(() => {
     // Conectar ao servidor Socket.io
-    const socket: Socket = io("http://localhost:5050");
+    const socket: Socket = io("https://api-psiu-1.onrender.com");
 
     // Evento quando um novo pedido for recebido
     socket.on("NEW_ORDER", (newOrder: Order) => {
