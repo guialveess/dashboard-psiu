@@ -15,7 +15,6 @@ export default function LastOrder() {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:5050/orders");
-      console.log(response.data); // Verifique se a resposta realmente tem os pedidos
       setOrders(response.data);
     } catch (error) {
       console.error("Erro ao buscar pedidos:", error);
@@ -28,16 +27,24 @@ export default function LastOrder() {
     // Conectar ao servidor Socket.io
     const socket: Socket = io("http://localhost:5050");
 
-    socket.on("UPDATE_ORDERS", (updatedOrders: Order[]) => {
-      console.log("Pedido recebido:", updatedOrders); // Exibe o pedido no console
+    // Evento quando um novo pedido for recebido
+    socket.on("NEW_ORDER", (newOrder: Order) => {
+      console.log("Novo pedido recebido:", newOrder);
 
-      // Atualizar pedidos sem duplicação
+      // Adicionar o novo pedido no topo da lista
       setOrders((prevOrders) => {
-        const newOrderIds = new Set(updatedOrders.map((order) => order.id));
-        return [
-          ...prevOrders.filter((order) => !newOrderIds.has(order.id)),
-          ...updatedOrders,
-        ];
+        const existingOrder = prevOrders.find(
+          (order) => order.id === newOrder.id
+        );
+        if (existingOrder) {
+          // Se o pedido já existir, atualizá-lo
+          return prevOrders.map((order) =>
+            order.id === newOrder.id ? newOrder : order
+          );
+        } else {
+          // Se for um novo pedido, adicioná-lo no início da lista
+          return [newOrder, ...prevOrders];
+        }
       });
     });
 
@@ -72,7 +79,7 @@ export default function LastOrder() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("status") || "pending"; // "success" mapeado para "Paid"
+        const status = row.getValue("status") || "pending";
         const statusText = status === "success" ? "Paid" : "pending";
         const statusClass =
           status === "success" ? "text-[#34CAA5]" : "text-[#ED544E]";
