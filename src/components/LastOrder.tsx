@@ -81,7 +81,7 @@ export default function LastOrder() {
     const socket: Socket = io("https://api-psiu-1.onrender.com");
 
     socket.on("connect", () => {
-      console.log("Socket.IO conectado");
+      console.log("Parabéns, Socket.IO conectado");
     });
 
     socket.on("disconnect", () => {
