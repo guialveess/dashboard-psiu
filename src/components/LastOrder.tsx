@@ -5,10 +5,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Order } from "../../types";
 import { io, Socket } from "socket.io-client";
+import { useToast } from "../components/hooks/use-toast";
 
 export default function LastOrder() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { toast } = useToast(); // Hook para exibir o toast
 
   // Função para buscar os pedidos da API usando Axios
   const fetchOrders = async () => {
@@ -31,7 +33,7 @@ export default function LastOrder() {
 
     // Função para tocar o som
     const playSound = () => {
-      const audio = new Audio("/sounds/new-order.mp3"); // Certifique-se de que o arquivo de som está na pasta public/sounds/
+      const audio = new Audio("/sounds/new-order.mp3");
       audio.play();
     };
 
@@ -40,6 +42,16 @@ export default function LastOrder() {
       playSound();
       console.log("Novo pedido recebido:", newOrder);
 
+      // Exibir o toast quando um novo pedido for recebido
+      toast(
+        `Novo pedido recebido`, // Primeiro argumento: mensagem
+        { type: "info" }, // Segundo argumento: objeto com propriedades do toast
+        {
+          // Terceiro argumento: objeto com outras propriedades
+          description: `Pedido #${newOrder.id} recebido com sucesso!`,
+          duration: 5000,
+        }
+      );
       // Adicionar o novo pedido no topo da lista
       setOrders((prevOrders) => {
         const existingOrder = prevOrders.find(
@@ -63,7 +75,7 @@ export default function LastOrder() {
       socket.disconnect();
       console.log("Desconectado do servidor Socket.io");
     };
-  }, []);
+  }, [toast]);
 
   const columns: ColumnDef<Order>[] = [
     {
@@ -147,7 +159,7 @@ export default function LastOrder() {
   return (
     <div>
       {loading ? (
-        <p>Loading orders...</p>
+        <p>Procurando Pedidos...</p>
       ) : (
         <DataTable columns={columns} data={orders} />
       )}

@@ -7,6 +7,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  totalPrice: any;
   id: string;
   createdAt: string;
   orderStatus: string;
