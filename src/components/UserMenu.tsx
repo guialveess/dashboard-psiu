@@ -40,11 +40,17 @@ export default function UserMenu({}: Props) {
         <div className="flex flex-col cursor-pointer">
           <div className="flex items-center gap-2 cursor-default  px-4 py-4 pb-4 w-full border-b">
             <img src="images/calendar.png" alt="calendar" className="w-4 h-4" />
-            <span className="text-xs text-gray-400">November 15, 2024</span>
+            <span className="text-xs text-gray-400 hidden lg:block">
+              {new Date().toLocaleDateString("pt-BR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
           </div>
 
           <MenuItem onClick={() => {}} label="Login" />
-          <MenuItem onClick={() => {}} label="Register" />
+          {/* <MenuItem onClick={() => {}} label="Register" /> */}
 
           <button
             type="submit"

@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Order } from "../../types";
 import { io, Socket } from "socket.io-client";
+import { Button } from "@/components/ui/button";
 
 import { useToast } from "../components/hooks/use-toast";
 
@@ -153,7 +154,7 @@ export default function LastOrder() {
     },
     {
       accessorKey: "tablenumber",
-      header: "Table Number",
+      header: "Número. Mesa",
       cell: ({ row }) => (
         <span className="text-[#0D062D]">
           {row.getValue<string>("tablenumber") ?? "N/A"}
@@ -180,7 +181,7 @@ export default function LastOrder() {
     },
     {
       accessorKey: "observations",
-      header: "Observations",
+      header: "Observações",
       cell: ({ row }) => (
         <span className="text-[#737373]">
           {row.getValue<string>("observations") || "N/A"}
@@ -189,7 +190,7 @@ export default function LastOrder() {
     },
     {
       accessorKey: "createdAt",
-      header: "Date",
+      header: "Data",
       cell: ({ row }) => {
         const dateStr = row.getValue<string>("createdAt");
         const date = dateStr ? new Date(dateStr) : new Date();
@@ -199,7 +200,7 @@ export default function LastOrder() {
     },
     {
       accessorKey: "totalPrice",
-      header: "Total Price",
+      header: "Preço Total",
       cell: ({ row }) => (
         <p className="text-[#0D062D] font-semibold">
           ${(row.getValue<number>("totalPrice") as number).toFixed(2)}
@@ -207,11 +208,11 @@ export default function LastOrder() {
       ),
     },
     {
-      accessorKey: "invoice",
-      header: "Invoice",
+      accessorKey: "orders",
+      header: "Pedido",
       cell: ({ row }) => (
         <Link
-          href={`/orders/${row.getValue<string>("id")}/invoice`}
+          href={`/orders/${row.getValue<string>("id")}`}
           className="text-[#0D062D] hover:text-gray-400"
         >
           View
@@ -224,16 +225,25 @@ export default function LastOrder() {
       cell: ({ row }) => {
         const orderId = row.getValue<string>("id");
         return (
-          <div>
-            <button onClick={() => updateOrderStatus(orderId, "pending")}>
+          <div className="flex space-x-2">
+            <Button
+              onClick={() => updateOrderStatus(orderId, "pending")}
+              variant="default"
+            >
               Preparando
-            </button>
-            <button onClick={() => updateOrderStatus(orderId, "success")}>
+            </Button>
+            <Button
+              onClick={() => updateOrderStatus(orderId, "success")}
+              variant="secondary"
+            >
               Confirmado
-            </button>
-            <button onClick={() => updateOrderStatus(orderId, "failed")}>
+            </Button>
+            <Button
+              onClick={() => updateOrderStatus(orderId, "failed")}
+              variant="destructive"
+            >
               Cancelado
-            </button>
+            </Button>
           </div>
         );
       },

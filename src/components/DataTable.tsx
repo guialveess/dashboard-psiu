@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { all } from "axios";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -97,7 +98,7 @@ export default function DataTable<TData, TValue>({
       </div>
 
       {/* Controles de Paginação */}
-      <div className="pagination-controls">
+      {/* <div className="pagination-controls">
         <button
           onClick={() =>
             setPagination({ pageIndex: 0, pageSize: pagination.pageSize })
@@ -128,31 +129,29 @@ export default function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
         >
           {">>"}
-        </button>
+        </button> */}
 
-        {/* Página atual */}
-        <span>
-          Page{" "}
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>{" "}
-        </span>
+      {/* Página atual */}
+      <span>
+        Page{" "}
+        <strong>
+          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </strong>{" "}
+      </span>
 
-        {/* Seleção de tamanho da página */}
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) =>
-            setPagination({ pageIndex: 0, pageSize: Number(e.target.value) })
-          }
-        >
-          {[10, 20, 30, 50, 80, 100].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Seleção de tamanho da página */}
+      <select
+        value={table.getState().pagination.pageSize}
+        onChange={(e) =>
+          setPagination({ pageIndex: 0, pageSize: Number(e.target.value) })
+        }
+      >
+        {[10, 20, 30, 50, 80, 100].map((size) => (
+          <option key={size} value={size}>
+            Mostrar {size}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

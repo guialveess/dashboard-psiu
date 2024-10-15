@@ -16,7 +16,7 @@ export default function Home() {
 
       <section className="grid grid-cols-1 gap-4 transition-all  lg:grid-cols-[minmax(422px,_1fr)_456px]">
         <CardContent className="py-2 bg-white grid-cols-4 ">
-          <div className="flex items-center justify-between space-x-4 pt-[11px] pb-[15px]">
+          <div className="flex items-center justify-between space-x-4 pt-[11px] pb-[15px] text-center">
             <Link href={`#`} className="text-[#34CAA5]">
               Todos os Pedidos
             </Link>

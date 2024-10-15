@@ -95,7 +95,7 @@ export default function HeaderNav({}: Props) {
                   type="text"
                   id="search"
                   name="search"
-                  placeholder="Search..."
+                  placeholder="Procurar..."
                   className="placeholder:text-[#A3A3A3] bg-transparent focus:outline-none rounded-full w-full p-3 placeholder:text-sm py-[0.5rem]  "
                 />
               </label>
@@ -120,7 +120,7 @@ export default function HeaderNav({}: Props) {
 
               {!openSearch && (
                 <PageTitle className="hidden mr-auto md:flex md:text-lg">
-                  Dashboard
+                  psiuu !
                 </PageTitle>
               )}
 
@@ -137,7 +137,7 @@ export default function HeaderNav({}: Props) {
                   type="text"
                   id="search"
                   name="search"
-                  placeholder="Search..."
+                  placeholder="Procurar..."
                   className="placeholder:text-[#A3A3A3] bg-transparent focus:outline-none rounded-full w-full lg:w-auto p-3 placeholder:text-sm py-[0.5rem]  "
                 />
               </label>
@@ -154,7 +154,11 @@ export default function HeaderNav({}: Props) {
                     className="w-4 h-4"
                   />
                   <span className="hidden lg:block text-sm">
-                    Outubro 10, 2024
+                    {new Date().toLocaleDateString("pt-BR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </span>
                 </div>
 
