@@ -4,15 +4,26 @@ import axios from "axios";
 import DataTable from "./DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { Order } from "../../types";
+import { Order, OrderItem } from "../../types";
 import { io, Socket } from "socket.io-client";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import { useToast } from "../components/hooks/use-toast";
 
 const socket: Socket = io("https://api-psiu-1.onrender.com");
 
 export default function LastOrder() {
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [sheetOpen, setSheetOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
@@ -29,6 +40,11 @@ export default function LastOrder() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const closeSheet = () => {
+    setSheetOpen(false);
+    setSelectedOrder(null); // Limpar o pedido selecionado ao fechar a sheet
   };
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
@@ -77,6 +93,25 @@ export default function LastOrder() {
       );
     }
   };
+
+  // Função para buscar os itens de um pedido pelo ID
+  const fetchOrderItems = async (orderId: string) => {
+    try {
+      const response = await axios.get(
+        `https://api-psiu-1.onrender.com/orders/${orderId}`
+      );
+      console.log("Itens do Pedido:", response.data.items); // Verifique os dados aqui
+      return response.data.items || [];
+    } catch (error) {
+      console.error("Erro ao buscar itens do pedido:", error);
+      return [];
+    }
+  };
+
+  // E no seu componente LastOrder
+  useEffect(() => {
+    console.log("Pedido Selecionado:", selectedOrder); // Verifique a estrutura do pedido
+  }, [selectedOrder]);
 
   useEffect(() => {
     const socket: Socket = io("https://api-psiu-1.onrender.com");
@@ -130,7 +165,6 @@ export default function LastOrder() {
     });
 
     socket.on("confirmOrder", async ({ orderId }) => {
-      // Alterado para um status válido
       await updateOrderStatus(orderId, "success");
       socket.emit("ORDER_UPDATED", { orderId, status: "success" });
     });
@@ -207,18 +241,7 @@ export default function LastOrder() {
         </p>
       ),
     },
-    {
-      accessorKey: "orders",
-      header: "Pedido",
-      cell: ({ row }) => (
-        <Link
-          href={`/orders/${row.getValue<string>("id")}`}
-          className="text-[#0D062D] hover:text-gray-400"
-        >
-          View
-        </Link>
-      ),
-    },
+
     {
       accessorKey: "actions",
       header: "Ações",
@@ -226,6 +249,16 @@ export default function LastOrder() {
         const orderId = row.getValue<string>("id");
         return (
           <div className="flex space-x-2">
+            <Button
+              onClick={async () => {
+                const items = await fetchOrderItems(orderId); // Buscar itens do pedido
+                setSelectedOrder({ ...row.original, items }); // Define o pedido selecionado com itens
+                setSheetOpen(true); // Abre a sheet com detalhes do pedido
+              }}
+              variant="outline"
+            >
+              Ver Detalhes
+            </Button>
             <Button
               onClick={() => updateOrderStatus(orderId, "pending")}
               variant="default"
@@ -242,7 +275,7 @@ export default function LastOrder() {
               onClick={() => updateOrderStatus(orderId, "failed")}
               variant="destructive"
             >
-              Cancelado
+              Cancelar
             </Button>
           </div>
         );
@@ -252,10 +285,50 @@ export default function LastOrder() {
 
   return (
     <div>
-      {loading ? (
-        <p>Procurando Pedidos...</p>
-      ) : (
-        <DataTable columns={columns} data={orders} />
+      <h1 className="text-2xl font-bold mb-4">Últimos Pedidos</h1>
+      <DataTable columns={columns} data={orders} />
+
+      {sheetOpen && selectedOrder && (
+        <Sheet open={sheetOpen} onOpenChange={closeSheet}>
+          <SheetTrigger>
+            <Button variant="outline">Ver Detalhes</Button>
+            {/* Botão para abrir o Sheet */}
+          </SheetTrigger>
+
+          <SheetContent>
+            <h2 className="text-xl font-bold">
+              Detalhes do Pedido #{selectedOrder.id}
+            </h2>
+            <p>Status: {selectedOrder.status}</p>
+            <p>Preço Total: ${selectedOrder.totalPrice}</p>
+
+            {selectedOrder.observations &&
+              selectedOrder.observations.length > 0 && (
+                <div>
+                  <h3 className="font-semibold">Observações:</h3>
+                  <p>{selectedOrder.observations}</p>
+                </div>
+              )}
+
+            <h3 className="font-semibold">Itens do Pedido:</h3>
+            <ul>
+              {Array.isArray(selectedOrder.items) &&
+              selectedOrder.items.length > 0 ? (
+                selectedOrder.items.map((item) => (
+                  <li key={item.id}>
+                    {item.product_name} - ${item.price.toFixed(2)} x{" "}
+                    {item.quantity}
+                  </li>
+                ))
+              ) : (
+                <li>Nenhum item encontrado.</li>
+              )}
+            </ul>
+            <SheetClose asChild>
+              <Button variant="outline">Fechar</Button>
+            </SheetClose>
+          </SheetContent>
+        </Sheet>
       )}
     </div>
   );

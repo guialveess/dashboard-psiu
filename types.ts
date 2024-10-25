@@ -1,18 +1,33 @@
+import { ReactNode } from "react";
+
 // types.ts
-export interface OrderItem {
+
+export interface Product {
   id: string;
-  productId: string;
-  quantity: number;
+  name: string; // Adicione esta linha
   price: number;
+  // outras propriedades do produto
+}
+
+export interface OrderItem {
+  name: ReactNode;
+  id: number; // ID do item
+  order_id: number; // ID do pedido (opcional, dependendo do uso)
+  product_id: number; // ID do produto
+  quantity: number; // Quantidade do item
+  price: number; // Preço do item
+  created_at: string; // Data de criação
+  product_name: string; // Nome do produto
+  product_image: string; // URL da imagem do produto
 }
 
 export interface Order {
-  totalPrice: any;
-  id: string;
-  createdAt: string;
-  orderStatus: string;
-  isPaid: boolean;
-  amount: number;
-  userId: string;
-  orderItems: OrderItem[];
+  id: string; // ID do pedido
+  tablenumber?: string; // Número da mesa (opcional)
+  status: string; // Status do pedido
+  userId: string; // ID do usuário
+  observations?: string; // Observações do pedido (opcional)
+  createdAt: string; // Data de criação
+  totalPrice: number; // Preço total
+  items: OrderItem[]; // Itens do pedido
 }

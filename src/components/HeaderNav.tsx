@@ -120,7 +120,7 @@ export default function HeaderNav({}: Props) {
 
               {!openSearch && (
                 <PageTitle className="hidden mr-auto md:flex md:text-lg">
-                  psiuu !
+                  Psiuu Dashboard !
                 </PageTitle>
               )}
 
