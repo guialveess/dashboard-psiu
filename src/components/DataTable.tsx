@@ -89,7 +89,7 @@ export default function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Sem resultados
                 </TableCell>
               </TableRow>
             )}
@@ -133,7 +133,7 @@ export default function DataTable<TData, TValue>({
 
       {/* Página atual */}
       <span>
-        Page{" "}
+        Página{" "}
         <strong>
           {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </strong>{" "}
