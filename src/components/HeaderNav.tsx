@@ -8,19 +8,29 @@ import Modal from "./Modal";
 import SidebarNav from "./SidebarNav";
 import UserMenu from "./UserMenu";
 
-type Props = {};
+type Props = {
+  // Definindo a função como uma propriedade
+};
 
 export default function HeaderNav({}: Props) {
+  // Agora aceitando toggleDarkMode como props
   const [isModalOpen, setModalOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  // A função toggleDarkMode já está sendo passada como props
 
   const [windowSize, setWindowSize] = useState<any>({
     width: null,
     height: null,
   });
+
+  type HeaderNavProps = {
+    toggleDarkMode: () => void; // Adicionando a definição para a propriedade toggleDarkMode
+  };
 
   const [scrollPosition, setScrollPosition] = useState(0);
 
@@ -46,10 +56,22 @@ export default function HeaderNav({}: Props) {
   }, []);
 
   useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode) {
+      setIsDarkMode(savedMode === "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", String(isDarkMode)); // Converter isDarkMode para string
+  }, [isDarkMode]);
+
+  useEffect(() => {
     if (scrollPosition || !!windowSize.width) {
       setModalOpen(false);
     }
   }, [scrollPosition, windowSize.width]);
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -80,7 +102,7 @@ export default function HeaderNav({}: Props) {
             <div
               className={`flex items-center justify-between lg:hidden ${
                 openSearch ? "block" : "hidden"
-              } `}
+              }`}
             >
               <label
                 htmlFor="search"
@@ -108,7 +130,7 @@ export default function HeaderNav({}: Props) {
               </Button>
             </div>
 
-            <div className=" flex items-center gap-2 justify-between md:gap-4 py-[0.5625rem] px-2 lg:px-5">
+            <div className="flex items-center gap-2 justify-between md:gap-4 py-[0.5625rem] px-2 lg:px-5">
               <Button
                 onClick={openModal}
                 className={`bg-transparent rounded-full text-black hover:bg-muted size-default p-2 h-10 w-10 lg:hidden ${
@@ -126,7 +148,7 @@ export default function HeaderNav({}: Props) {
 
               <label
                 htmlFor="search"
-                className=" hidden lg:flex  ml-auto bg-white border rounded-full px-2 items-center gap-x-2 cursor-pointer  focus:outline-none focus:border-blue-500 focus:shadow-outline-blue "
+                className="hidden lg:flex ml-auto bg-white border rounded-full px-2 items-center gap-x-2 cursor-pointer focus:outline-none focus:border-blue-500 focus:shadow-outline-blue "
               >
                 <img
                   src="images/search.png"
@@ -145,7 +167,7 @@ export default function HeaderNav({}: Props) {
               <div
                 className={`flex items-center space-x-3 lg:space-x-5 ${
                   openSearch ? "hidden" : "block"
-                } `}
+                }`}
               >
                 <div className="hidden lg:flex items-center space-x-2">
                   <img
@@ -165,7 +187,7 @@ export default function HeaderNav({}: Props) {
                 <label
                   onClick={() => setOpenSearch(true)}
                   htmlFor="search"
-                  className="lg:hidden h-10 w-10  flex  justify-center  ml-auto bg-white border rounded-full px-2 items-center cursor-pointer  focus:outline-none focus:border-blue-500 focus:shadow-outline-blue "
+                  className="lg:hidden h-10 w-10 flex justify-center ml-auto bg-white border rounded-full px-2 items-center cursor-pointer focus:outline-none focus:border-blue-500 focus:shadow-outline-blue "
                 >
                   <img
                     src="images/search.png"
@@ -174,7 +196,7 @@ export default function HeaderNav({}: Props) {
                   />
                 </label>
 
-                <Button className=" bg-transparent rounded-full lg:flex w-10 h-10 items-center justify-between border border-[#DADDDD] text-black hover:bg-transparent px-2">
+                <Button className="bg-transparent rounded-full lg:flex w-10 h-10 items-center justify-between border border-[#DADDDD] text-black hover:bg-transparent px-2">
                   <Bell />
                 </Button>
 

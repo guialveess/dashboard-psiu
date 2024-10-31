@@ -4,7 +4,6 @@ import React from "react";
 import { Nav } from "./nav";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import ToggleSwitch from "./ToggleSwitch";
 
 type Props = {};
 
@@ -68,7 +67,6 @@ export default function SidebarNav({}: Props) {
           // },
         ]}
       />
-      <ToggleSwitch />
 
       <div className="flex flex-col gap-2 items-center justify-center mt-auto pb-10">
         <Button className=" bg-transparent rounded-full flex  items-center text-black hover:bg-transparent">
