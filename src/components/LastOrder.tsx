@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Order, OrderItem } from "../../types";
 import { io, Socket } from "socket.io-client";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetClose,
@@ -200,12 +201,27 @@ export default function LastOrder() {
       header: "Status",
       cell: ({ row }) => {
         const status = row.getValue<string>("status") || "pending";
-        const statusText = status === "success" ? "Paid" : status;
+        const statusText =
+          status === "success"
+            ? "Confirmado"
+            : status === "pending"
+            ? "Preparando"
+            : status === "failed"
+            ? "Cancelado"
+            : status;
         const statusClass =
-          status === "success" ? "text-[#34CAA5]" : "text-[#ED544E]";
-        return <p className={statusClass}>{statusText}</p>;
+          status === "success"
+            ? "text-[#34CAA5]"
+            : status === "pending"
+            ? "text-[#FFE700]"
+            : status === "failed"
+            ? "text-[#FF0000]"
+            : "text-[#000000]";
+
+        return <Badge className={statusClass}>{statusText}</Badge>;
       },
     },
+
     {
       accessorKey: "userId",
       header: "User ID",

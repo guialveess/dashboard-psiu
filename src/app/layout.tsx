@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen w-full bg-[#FAFAFA] text-black flex ",
+          "min-h-screen w-full bg-[#FAFAFA] text-black flex overflow-hidden", // Adicionando overflow-hidden
           inter.className,
           { "debug-screens": process.env.NODE_ENV === "development" }
         )}
@@ -29,9 +29,15 @@ export default function RootLayout({
         <aside className="hidden min-h-screen bg-[#F7F8FA] md:block border-r md:w-[80px] transition-all duration-300">
           <SidebarNav />
         </aside>
-        <main className="flex-1">
+        <main className="flex-1 overflow-y-auto">
+          {" "}
+          {/* Permitir rolagem vertical no main */}
           <HeaderNav />
-          {children}
+          <div className="p-2 md:p-5 flex flex-col gap-5 w-full h-full overflow-auto">
+            {" "}
+            {/* Permitir rolagem dentro do main */}
+            {children}
+          </div>
         </main>
       </body>
     </html>

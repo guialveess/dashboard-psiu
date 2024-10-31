@@ -135,7 +135,7 @@ export default function DataTable<TData, TValue>({
       <span>
         Página{" "}
         <strong>
-          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          {table.getState().pagination.pageIndex + 1} De {table.getPageCount()}
         </strong>{" "}
       </span>
 

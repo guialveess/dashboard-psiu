@@ -9,17 +9,15 @@ export default function Home() {
   const [] = useState(false);
 
   return (
-    <div className="p-2 md:p-5 flex flex-col gap-5 w-full">
-      <section className="grid grid-cols-1 gap-4 transition-all lg:grid-cols-[1fr_456px]">
-        {" "}
+    <div className="p-2 md:p-5 flex flex-col gap-5 w-full h-screen overflow-hidden">
+      <section className="w-full flex flex-col gap-4">
+        {/* Primeira seção (caso haja conteúdo adicional) */}
       </section>
 
-      <section className="grid grid-cols-1 gap-4 transition-all  lg:grid-cols-[minmax(422px,_1fr)_456px]">
-        <CardContent className="py-2 bg-white grid-cols-4 ">
+      <section className="w-full flex flex-col gap-4 lg:flex-row overflow-y-auto max-h-[70vh]">
+        <CardContent className="w-full max-w-full py-2 bg-white">
           <div className="flex items-center justify-between space-x-4 pt-[11px] pb-[15px] text-center">
-            <Link href={`#`} className="text-[#34CAA5]">
-              Todos os Pedidos
-            </Link>
+            {/* Link comentado */}
           </div>
           <LastOrder />
         </CardContent>
